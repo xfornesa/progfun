@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import java.util.NoSuchElementException
 
 @RunWith(classOf[JUnitRunner])
 class TweetSetSuite extends FunSuite {
@@ -59,6 +60,33 @@ class TweetSetSuite extends FunSuite {
   test("union: with empty set (2)") {
     new TestSets {
       assert(size(set1.union(set5)) === 4)
+    }
+  }
+
+  test("mostRetweeted: exception when Empty") {
+    new TestSets {
+      intercept[NoSuchElementException](
+        set1.mostRetweeted
+      )
+    }
+  }
+
+  test("mostRetweeted: when non Empty, trivial case one tweet") {
+    new TestSets {
+      val tweetA: Tweet = new Tweet("a", "a body", 10)
+      val setT = set1.incl(tweetA)
+
+      assert(tweetA == setT.mostRetweeted)
+    }
+  }
+
+  test("mostRetweeted: when non Empty, more than one tweet") {
+    new TestSets {
+      val tweetA: Tweet = new Tweet("a", "a body", 10)
+      val tweetB: Tweet = new Tweet("b", "b body", 20)
+      val setT = set1.incl(tweetA).incl(tweetB)
+
+      assert(tweetB == setT.mostRetweeted)
     }
   }
 
